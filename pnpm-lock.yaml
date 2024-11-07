@@ -218,17 +218,17 @@ importers:
         specifier: 6.0.2
         version: 6.0.2
       vite:
-        specifier: 5.4.10
-        version: 5.4.10(@types/node@20.14.11)(terser@5.36.0)
+        specifier: ^6.0.0-beta
+        version: 6.0.0-beta.9(@types/node@20.14.11)(jiti@1.21.0)(terser@5.36.0)(yaml@2.4.5)
       vite-imagetools:
         specifier: 7.0.4
         version: 7.0.4(rollup@4.24.2)
       vite-plugin-dts:
         specifier: 4.3.0
-        version: 4.3.0(@types/node@20.14.11)(rollup@4.24.2)(typescript@5.4.5)(vite@5.4.10(@types/node@20.14.11)(terser@5.36.0))
+        version: 4.3.0(@types/node@20.14.11)(rollup@4.24.2)(typescript@5.4.5)(vite@6.0.0-beta.9(@types/node@20.14.11)(jiti@1.21.0)(terser@5.36.0)(yaml@2.4.5))
       vite-tsconfig-paths:
         specifier: 5.0.1
-        version: 5.0.1(typescript@5.4.5)(vite@5.4.10(@types/node@20.14.11)(terser@5.36.0))
+        version: 5.0.1(typescript@5.4.5)(vite@6.0.0-beta.9(@types/node@20.14.11)(jiti@1.21.0)(terser@5.36.0)(yaml@2.4.5))
       vitest:
         specifier: 2.1.4
         version: 2.1.4(@types/node@20.14.11)(terser@5.36.0)
@@ -413,11 +413,11 @@ importers:
         specifier: 0.33.3
         version: 0.33.3
       vite:
-        specifier: 5.4.10
-        version: 5.4.10(@types/node@20.14.11)(terser@5.36.0)
+        specifier: ^6.0.0-beta
+        version: 6.0.0-beta.9(@types/node@20.14.11)(jiti@1.21.0)(terser@5.36.0)(yaml@2.4.5)
       vite-plugin-inspect:
         specifier: 0.8.5
-        version: 0.8.5(rollup@4.24.2)(vite@5.4.10(@types/node@20.14.11)(terser@5.36.0))
+        version: 0.8.5(rollup@4.24.2)(vite@6.0.0-beta.9(@types/node@20.14.11)(jiti@1.21.0)(terser@5.36.0)(yaml@2.4.5))
       wrangler:
         specifier: 3.65.1
         version: 3.65.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
@@ -541,11 +541,11 @@ importers:
         specifier: '*'
         version: 6.18.2
       vite:
-        specifier: 5.4.10
-        version: 5.4.10(@types/node@20.14.11)(terser@5.36.0)
+        specifier: ^6.0.0-beta
+        version: 6.0.0-beta.9(@types/node@20.14.11)(jiti@1.21.0)(terser@5.36.0)(yaml@2.4.5)
       vite-tsconfig-paths:
         specifier: 5.0.1
-        version: 5.0.1(typescript@5.4.5)(vite@5.4.10(@types/node@20.14.11)(terser@5.36.0))
+        version: 5.0.1(typescript@5.4.5)(vite@6.0.0-beta.9(@types/node@20.14.11)(jiti@1.21.0)(terser@5.36.0)(yaml@2.4.5))
       vitest:
         specifier: 2.1.4
         version: 2.1.4(@types/node@20.14.11)(terser@5.36.0)
@@ -601,8 +601,8 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       vite:
-        specifier: 5.4.10
-        version: 5.4.10(@types/node@20.14.11)(terser@5.36.0)
+        specifier: ^6.0.0-beta
+        version: 6.0.0-beta.9(@types/node@20.14.11)(jiti@1.21.0)(terser@5.36.0)(yaml@2.4.5)
 
   packages/qwik-router:
     dependencies:
@@ -9506,6 +9506,46 @@ packages:
       terser:
         optional: true
 
+  vite@6.0.0-beta.9:
+    resolution: {integrity: sha512-gMaa1/cnKw4xCv1QmPcBInF8D1I17a0/+kUDWuPLGm0ZuupFW2YKUU91DQFc4WwgvvEKFd+kNHin9+qlX0SeqQ==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': ^18.0.0 || >=20.0.0
+      jiti: '>=1.21.0'
+      less: '*'
+      lightningcss: ^1.21.0
+      sass: '*'
+      sass-embedded: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.16.0
+      tsx: ^4.8.1
+      yaml: ^2.4.2
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      jiti:
+        optional: true
+      less:
+        optional: true
+      lightningcss:
+        optional: true
+      sass:
+        optional: true
+      sass-embedded:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+      tsx:
+        optional: true
+      yaml:
+        optional: true
+
   vitest@2.1.4:
     resolution: {integrity: sha512-eDjxbVAJw1UJJCHr5xr/xM86Zx+YxIEXGAR+bmnEID7z9qWfoxpHw0zdobz+TQAFOLT+nEXz3+gx6nUJ7RgmlQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -9925,7 +9965,7 @@ snapshots:
   '@babel/code-frame@7.24.6':
     dependencies:
       '@babel/highlight': 7.24.6
-      picocolors: 1.0.1
+      picocolors: 1.1.1
 
   '@babel/helper-module-imports@7.24.6':
     dependencies:
@@ -9944,7 +9984,7 @@ snapshots:
       '@babel/helper-validator-identifier': 7.24.6
       chalk: 2.4.2
       js-tokens: 4.0.0
-      picocolors: 1.0.1
+      picocolors: 1.1.1
 
   '@babel/parser@7.24.6':
     dependencies:
@@ -19540,7 +19580,7 @@ snapshots:
       - supports-color
       - terser
 
-  vite-plugin-dts@4.3.0(@types/node@20.14.11)(rollup@4.24.2)(typescript@5.4.5)(vite@5.4.10(@types/node@20.14.11)(terser@5.36.0)):
+  vite-plugin-dts@4.3.0(@types/node@20.14.11)(rollup@4.24.2)(typescript@5.4.5)(vite@6.0.0-beta.9(@types/node@20.14.11)(jiti@1.21.0)(terser@5.36.0)(yaml@2.4.5)):
     dependencies:
       '@microsoft/api-extractor': 7.47.11(@types/node@20.14.11)
       '@rollup/pluginutils': 5.1.0(rollup@4.24.2)
@@ -19553,13 +19593,13 @@ snapshots:
       magic-string: 0.30.11
       typescript: 5.4.5
     optionalDependencies:
-      vite: 5.4.10(@types/node@20.14.11)(terser@5.36.0)
+      vite: 6.0.0-beta.9(@types/node@20.14.11)(jiti@1.21.0)(terser@5.36.0)(yaml@2.4.5)
     transitivePeerDependencies:
       - '@types/node'
       - rollup
       - supports-color
 
-  vite-plugin-inspect@0.8.5(rollup@4.24.2)(vite@5.4.10(@types/node@20.14.11)(terser@5.36.0)):
+  vite-plugin-inspect@0.8.5(rollup@4.24.2)(vite@6.0.0-beta.9(@types/node@20.14.11)(jiti@1.21.0)(terser@5.36.0)(yaml@2.4.5)):
     dependencies:
       '@antfu/utils': 0.7.10
       '@rollup/pluginutils': 5.1.0(rollup@4.24.2)
@@ -19570,18 +19610,18 @@ snapshots:
       perfect-debounce: 1.0.0
       picocolors: 1.0.1
       sirv: 2.0.4
-      vite: 5.4.10(@types/node@20.14.11)(terser@5.36.0)
+      vite: 6.0.0-beta.9(@types/node@20.14.11)(jiti@1.21.0)(terser@5.36.0)(yaml@2.4.5)
     transitivePeerDependencies:
       - rollup
       - supports-color
 
-  vite-tsconfig-paths@5.0.1(typescript@5.4.5)(vite@5.4.10(@types/node@20.14.11)(terser@5.36.0)):
+  vite-tsconfig-paths@5.0.1(typescript@5.4.5)(vite@6.0.0-beta.9(@types/node@20.14.11)(jiti@1.21.0)(terser@5.36.0)(yaml@2.4.5)):
     dependencies:
       debug: 4.3.5(supports-color@9.4.0)
       globrex: 0.1.2
       tsconfck: 3.1.0(typescript@5.4.5)
     optionalDependencies:
-      vite: 5.4.10(@types/node@20.14.11)(terser@5.36.0)
+      vite: 6.0.0-beta.9(@types/node@20.14.11)(jiti@1.21.0)(terser@5.36.0)(yaml@2.4.5)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -19605,6 +19645,17 @@ snapshots:
       '@types/node': 20.14.11
       fsevents: 2.3.3
       terser: 5.36.0
+
+  vite@6.0.0-beta.9(@types/node@20.14.11)(jiti@1.21.0)(terser@5.36.0)(yaml@2.4.5):
+    dependencies:
+      esbuild: 0.24.0
+      postcss: 8.4.47
+      rollup: 4.24.2
+    optionalDependencies:
+      '@types/node': 20.14.11
+      jiti: 1.21.0
+      terser: 5.36.0
+      yaml: 2.4.5
 
   vitest@2.1.4(@types/node@20.14.11)(terser@5.36.0):
     dependencies:

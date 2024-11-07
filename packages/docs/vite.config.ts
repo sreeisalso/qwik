@@ -4,7 +4,7 @@ import { qwikVite } from '@qwik.dev/core/optimizer';
 import { qwikReact } from '@qwik.dev/react/vite';
 import { qwikRouter } from '@qwik.dev/router/vite';
 import path, { resolve } from 'node:path';
-import { defineConfig, loadEnv, type Plugin } from 'vite';
+import { defineConfig, loadEnv, type Plugin, type UserConfig } from 'vite';
 import Inspect from 'vite-plugin-inspect';
 import { examplesData, playgroundData, rawSource, tutorialData } from './vite.repl-apps';
 import { sourceResolver } from './vite.source-resolver';
@@ -52,141 +52,139 @@ const muteWarningsPlugin = (warningsToIgnore: string[][]): Plugin => {
   };
 };
 
-export default defineConfig(async () => {
-  const { default: rehypePrettyCode } = await import('rehype-pretty-code');
+import rehypePrettyCode from 'rehype-pretty-code';
 
-  const routesDir = resolve('src', 'routes');
-  return {
+const routesDir = resolve('src', 'routes');
+const config: UserConfig = {
+  server: {
     optimizeDeps: {
       entries: ['./src/routes/**/index.tsx', './src/routes/**/layout.tsx'],
     },
-    dev: {
-      headers: {
-        'Cache-Control': 'public, max-age=0',
+    port: 3000,
+    headers: {
+      'Cache-Control': 'public, max-age=0',
+    },
+  },
+  preview: {
+    headers: {
+      'Cache-Control': 'public, max-age=600',
+    },
+  },
+  resolve: {
+    alias: [
+      {
+        find: '~',
+        replacement: path.resolve(__dirname, 'src'),
       },
-    },
-    preview: {
-      headers: {
-        'Cache-Control': 'public, max-age=600',
+      {
+        // HACK: For some reason supabase imports node-fetch but only in CloudFlare build
+        // This hack is here to prevent the import from happening since we don't need to
+        // polyfill fetch in the edge.
+        find: '@supabase/node-fetch',
+        replacement: path.resolve(__dirname, 'src', 'empty.ts'),
       },
-    },
-    resolve: {
-      alias: [
-        {
-          find: '~',
-          replacement: path.resolve(__dirname, 'src'),
-        },
-        {
-          // HACK: For some reason supabase imports node-fetch but only in CloudFlare build
-          // This hack is here to prevent the import from happening since we don't need to
-          // polyfill fetch in the edge.
-          find: '@supabase/node-fetch',
-          replacement: path.resolve(__dirname, 'src', 'empty.ts'),
-        },
-      ],
-    },
-    ssr: {
-      noExternal: [
-        '@mui/material',
-        '@mui/system',
-        '@emotion/react',
-        '@algolia/autocomplete-core/dist/esm/resolve',
-        '@algolia/autocomplete-core',
-        '@algolia/autocomplete-shared',
-        'algoliasearch/lite',
-        'algoliasearch',
-        '@algolia/autocomplete-core/dist/esm/reshape',
-        'algoliasearch/dist/algoliasearch-lite.esm.browser',
-      ],
-    },
-
-    plugins: [
-      // some imported react code has sourcemap issues
-      muteWarningsPlugin([
-        ['SOURCEMAP_ERROR', "Can't resolve original location of error"],
-        ['MODULE_LEVEL_DIRECTIVE', 'use client'],
-      ]),
-      rawSource(),
-      qwikRouter({
-        mdxPlugins: {
-          rehypeSyntaxHighlight: false,
-          remarkGfm: true,
-          rehypeAutolinkHeadings: true,
-        },
-        mdx: {
-          rehypePlugins: [
-            [
-              rehypePrettyCode as any,
-              {
-                theme: 'dark-plus',
-                onVisitLine(node: any) {
-                  // Prevent lines from collapsing in `display: grid` mode, and
-                  // allow empty lines to be copy/pasted
-                  if (node.children.length === 0) {
-                    node.children = [{ type: 'text', value: ' ' }];
-                  }
-                },
-                onVisitHighlightedLine(node: any) {
-                  // Each line node by default has `class="line"`.
-                  if (node.properties.className) {
-                    node.properties.className.push('line--highlighted');
-                  }
-                },
-                onVisitHighlightedWord(node: any, id: string) {
-                  // Each word node has no className by default.
-                  node.properties.className = ['word'];
-                  if (id) {
-                    const backgroundColor = {
-                      a: 'rgb(196 42 94 / 59%)',
-                      b: 'rgb(0 103 163 / 56%)',
-                      c: 'rgb(100 50 255 / 35%)',
-                    }[id];
-
-                    const color = {
-                      a: 'rgb(255 225 225 / 100%)',
-                      b: 'rgb(175 255 255 / 100%)',
-                      c: 'rgb(225 200 255 / 100%)',
-                    }[id];
-                    if (node.properties['data-rehype-pretty-code-wrapper']) {
-                      node.children.forEach((childNode: any) => {
-                        childNode.properties.style = ``;
-                        childNode.properties.className = '';
-                      });
-                    }
-                    node.properties.style = `background-color: ${backgroundColor}; color: ${color};`;
-                  }
-                },
-              },
-            ],
-          ],
-        },
-      }),
-      qwikVite({
-        lint: false,
-        experimental: ['insights'],
-      }),
-      partytownVite({
-        dest: resolve('dist', '~partytown'),
-      }),
-      examplesData(routesDir),
-      playgroundData(routesDir),
-      tutorialData(routesDir),
-      sourceResolver(docsDir),
-      qwikReact(),
-      Inspect(),
-      qwikInsights({ publicApiKey: PUBLIC_QWIK_INSIGHTS_KEY }),
     ],
-    build: {
-      sourcemap: true,
-      rollupOptions: {
-        output: {
-          assetFileNames: 'assets/[hash]-[name].[ext]',
-        },
+  },
+  ssr: {
+    noExternal: [
+      '@mui/material',
+      '@mui/system',
+      '@emotion/react',
+      '@algolia/autocomplete-core/dist/esm/resolve',
+      '@algolia/autocomplete-core',
+      '@algolia/autocomplete-shared',
+      'algoliasearch/lite',
+      'algoliasearch',
+      '@algolia/autocomplete-core/dist/esm/reshape',
+      'algoliasearch/dist/algoliasearch-lite.esm.browser',
+    ],
+  },
+
+  plugins: [
+    // some imported react code has sourcemap issues
+    muteWarningsPlugin([
+      ['SOURCEMAP_ERROR', "Can't resolve original location of error"],
+      ['MODULE_LEVEL_DIRECTIVE', 'use client'],
+    ]),
+    rawSource(),
+    qwikRouter({
+      mdxPlugins: {
+        rehypeSyntaxHighlight: false,
+        remarkGfm: true,
+        rehypeAutolinkHeadings: true,
+      },
+      mdx: {
+        rehypePlugins: [
+          [
+            rehypePrettyCode as any,
+            {
+              theme: 'dark-plus',
+              onVisitLine(node: any) {
+                // Prevent lines from collapsing in `display: grid` mode, and
+                // allow empty lines to be copy/pasted
+                if (node.children.length === 0) {
+                  node.children = [{ type: 'text', value: ' ' }];
+                }
+              },
+              onVisitHighlightedLine(node: any) {
+                // Each line node by default has `class="line"`.
+                if (node.properties.className) {
+                  node.properties.className.push('line--highlighted');
+                }
+              },
+              onVisitHighlightedWord(node: any, id: string) {
+                // Each word node has no className by default.
+                node.properties.className = ['word'];
+                if (id) {
+                  const backgroundColor = {
+                    a: 'rgb(196 42 94 / 59%)',
+                    b: 'rgb(0 103 163 / 56%)',
+                    c: 'rgb(100 50 255 / 35%)',
+                  }[id];
+
+                  const color = {
+                    a: 'rgb(255 225 225 / 100%)',
+                    b: 'rgb(175 255 255 / 100%)',
+                    c: 'rgb(225 200 255 / 100%)',
+                  }[id];
+                  if (node.properties['data-rehype-pretty-code-wrapper']) {
+                    node.children.forEach((childNode: any) => {
+                      childNode.properties.style = ``;
+                      childNode.properties.className = '';
+                    });
+                  }
+                  node.properties.style = `background-color: ${backgroundColor}; color: ${color};`;
+                }
+              },
+            },
+          ],
+        ],
+      },
+    }),
+    qwikVite({
+      lint: false,
+      experimental: ['insights'],
+    }),
+    partytownVite({
+      dest: resolve('dist', '~partytown'),
+    }),
+    examplesData(routesDir),
+    playgroundData(routesDir),
+    tutorialData(routesDir),
+    sourceResolver(docsDir),
+    qwikReact(),
+    Inspect(),
+    qwikInsights({ publicApiKey: PUBLIC_QWIK_INSIGHTS_KEY }),
+  ],
+  build: {
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        assetFileNames: 'assets/[hash]-[name].[ext]',
       },
     },
-    clearScreen: false,
-    server: {
-      port: 3000,
-    },
-  };
-});
+  },
+  clearScreen: false,
+};
+
+export default defineConfig(config);

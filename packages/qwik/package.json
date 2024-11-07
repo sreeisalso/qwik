@@ -169,7 +169,7 @@
   "main": "./src/index.ts",
   "peerDependencies": {
     "prettier": "*",
-    "vite": "^5",
+    "vite": "beta",
     "vitest": "^2"
   },
   "peerDependenciesMeta": {
