@@ -1,5 +1,11 @@
 # @qwik.dev/core
 
+## 2.0.0-alpha.6
+
+### Patch Changes
+
+- 🐞🩹 wait for QRL to resolve for signal attribute (by [@Varixo](https://github.com/Varixo) in [#7243](https://github.com/QwikDev/qwik/pull/7243))
+
 ## 2.0.0-alpha.5
 
 ### Patch Changes
