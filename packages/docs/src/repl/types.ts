@@ -1,4 +1,4 @@
-import type { NoSerialize } from '@qwik.dev/core';
+import type { NoSerialize, Signal } from '@qwik.dev/core';
 import type {
   Diagnostic,
   QwikManifest,
@@ -27,7 +27,7 @@ export interface ReplInputOptions extends Omit<QwikRollupPluginOptions, 'srcDir'
 
 export interface ReplStore {
   clientId: string;
-  html: string;
+  htmlResult: ReplHTMLResult;
   transformedModules: TransformModule[];
   clientBundles: ReplModuleOutput[];
   ssrModules: ReplModuleOutput[];
@@ -58,6 +58,7 @@ export interface ReplModuleOutput {
   path: string;
   code: string;
   size?: string;
+  shorten?: Signal<boolean>;
 }
 
 export interface ReplMessageBase {
@@ -111,7 +112,7 @@ export interface ReplEvent {
 export interface ReplResult extends ReplMessageBase {
   type: 'result';
   buildId: number;
-  html: string;
+  htmlResult: ReplHTMLResult;
   transformedModules: TransformModule[];
   clientBundles: ReplModuleOutput[];
   ssrModules: ReplModuleOutput[];
@@ -120,10 +121,16 @@ export interface ReplResult extends ReplMessageBase {
   events: ReplEvent[];
 }
 
+export interface ReplHTMLResult {
+  rawHtml: string;
+  prettyHtml: string;
+}
+
 export type OutputPanel =
   | 'app'
   | 'html'
-  | 'symbols'
+  | 'state'
+  | 'segments'
   | 'clientBundles'
   | 'serverModules'
   | 'diagnostics';

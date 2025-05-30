@@ -991,7 +991,13 @@ export const vnode_diff = (
   }
 
   function expectVirtual(type: VirtualType, jsxKey: string | null) {
-    if (vCurrent && vnode_isVirtualVNode(vCurrent) && getKey(vCurrent) === jsxKey && !!jsxKey) {
+    const checkKey = type === VirtualType.Fragment;
+    if (
+      vCurrent &&
+      vnode_isVirtualVNode(vCurrent) &&
+      getKey(vCurrent) === jsxKey &&
+      (checkKey ? !!jsxKey : true)
+    ) {
       // All is good.
       return;
     } else if (jsxKey !== null) {
@@ -1047,9 +1053,9 @@ export const vnode_diff = (
         } else {
           // We did not find the component, create it.
           insertNewComponent(host, componentQRL, jsxProps);
+          shouldRender = true;
         }
         host = vNewNode as VirtualVNode;
-        shouldRender = true;
       } else if (!hashesAreEqual || !jsxNode.key) {
         insertNewComponent(host, componentQRL, jsxProps);
         host = vNewNode as VirtualVNode;
@@ -1231,7 +1237,12 @@ function getComponentHash(vNode: VNode | null, getObject: (id: string) => any): 
 function Projection() {}
 
 function propsDiffer(src: Record<string, any>, dst: Record<string, any>): boolean {
-  if (!src || !dst) {
+  const srcEmpty = isPropsEmpty(src);
+  const dstEmpty = isPropsEmpty(dst);
+  if (srcEmpty && dstEmpty) {
+    return false;
+  }
+  if (srcEmpty || dstEmpty) {
     return true;
   }
   let srcKeys = removePropsKeys(Object.keys(src), ['children', QBackRefs]);
@@ -1249,6 +1260,13 @@ function propsDiffer(src: Record<string, any>, dst: Record<string, any>): boolea
     }
   }
   return false;
+}
+
+function isPropsEmpty(props: Record<string, any>): boolean {
+  if (!props) {
+    return true;
+  }
+  return Object.keys(props).length === 0;
 }
 
 function removePropsKeys(keys: string[], propKeys: string[]): string[] {
